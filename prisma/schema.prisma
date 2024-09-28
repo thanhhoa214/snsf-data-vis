@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Discipline {
+  Discipline             String  @id
+  Discipline_Level1      String
+  Discipline_Level2      String?
+  DisciplineNumber       Int
+  DisciplineLevel        Int
+  ParentDiscipline       String?
+  ParentDisciplineNumber Float?
+}
+
+model Grant {
+  GrantNumber                Int     @id @default(autoincrement())
+  AmountGrantedAllSets       Float
+  CallDecisionYear           Int
+  CallEndDate                String?
+  CallFullTitle              String?
+  GrantEndDate               String
+  GrantStartDate             String
+  FundingInstrumentLevel1    String
+  FundingInstrumentPublished String
+  FundingInstrumentReporting String
+  GrantNumberString          String
+  Institute                  String?
+  InstituteCountry           String?
+  MainDiscipline             String
+  MainDisciplineNumber       Int
+  ResearchInstitution        String?
+  State                      String
+  Title                      String
+  TitleEnglish               String?
+
+  GrantToPerson GrantToPerson[]
+}
+
+model GrantByPersonByDate {
+  PersonNumber Int
+  GrantNumber  Int
+
+  @@id([PersonNumber, GrantNumber])
+}
+
+model GrantDateRange {
+  GrantNumber    Int     @id @default(autoincrement())
+  GrantStartDate String
+  GrantEndDate   String
+  YearlyAvg      Float
+  DurationYears  Int
+  DateList       String?
+}
+
+model GrantToDiscipline {
+  DisciplineNumber Int
+  GrantNumber      Int
+
+  @@id([DisciplineNumber, GrantNumber])
+}
+
+model GrantToKeyword {
+  GrantNumber Int
+  KeywordId   Int
+
+  @@id([GrantNumber, KeywordId])
+}
+
+model GrantToPerson {
+  PersonNumber Int
+  GrantNumber  Int
+  Type         String
+
+  grant  Grant  @relation(fields: [GrantNumber], references: [GrantNumber])
+  person Person @relation(fields: [PersonNumber], references: [PersonNumber])
+
+  @@id([PersonNumber, GrantNumber])
+}
+
+model Institute {
+  InstituteNumber     Int     @id @default(autoincrement())
+  index               Int
+  Institute           String
+  InstituteCountry    String?
+  ResearchInstitution String?
+}
+
+model OutputAward {
+  GrantNumber Int
+  OutputId    String  @id
+  Title       String?
+  Year        Float?
+}
+
+model Person {
+  PersonNumber          Int                    @id @default(autoincrement())
+  InstituteNumber       Float?
+  FirstName             String?
+  Surname               String
+  Gender                String
+  Institute             String?
+  InstitutePlace        String?
+  ORCID                 String?
+  GrantToPersonNetwork1 GrantToPersonNetwork[] @relation("Person1")
+  GrantToPersonNetwork2 GrantToPersonNetwork[] @relation("Person2")
+
+  GrantToPerson GrantToPerson[]
+}
+
+model GrantToPersonNetwork {
+  GrantNumber   Int
+  PersonNumber1 Int
+  PersonNumber2 Int
+  Type          String
+
+  Person1 Person @relation(fields: [PersonNumber1], references: [PersonNumber], name: "Person1")
+  Person2 Person @relation(fields: [PersonNumber2], references: [PersonNumber], name: "Person2")
+
+  @@id([GrantNumber, PersonNumber1, PersonNumber2])
+}
