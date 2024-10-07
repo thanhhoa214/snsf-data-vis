@@ -1,13 +1,18 @@
 import { shortenNumber } from "@/lib/utils";
+import dynamic from "next/dynamic";
 import { searchGrant } from "../actions/grant";
 import { getGrantToPersonNetwork } from "../actions/grantToPersonNetwork";
 import { searchPerson } from "../actions/persons";
 import { getStatistics } from "../actions/snsf";
 import MapChart from "./MapChart";
 import { NetworkGraphFilterProps } from "./NetworkGraphFilter";
-import NetworkGraphSection from "./NetworkGraphSection";
 import Top10FundedCountries from "./Top10FundedCountries";
 import Top5GrantMostAward from "./Top5GrantMostAward";
+
+const DynamicNetworkGraphSection = dynamic(
+  () => import("./NetworkGraphSection"),
+  { ssr: false }
+);
 
 export default async function Page() {
   const results = await Promise.all([searchGrant(), searchPerson()]);
@@ -47,7 +52,7 @@ export default async function Page() {
         ))}
       </ul>
 
-      <NetworkGraphSection
+      <DynamicNetworkGraphSection
         graphResponse={await getGrantToPersonNetwork()}
         filterResponse={filterResponse}
       />

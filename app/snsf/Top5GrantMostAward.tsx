@@ -25,8 +25,8 @@ export default async function Top5GrantMostAward() {
       Institute: true,
       AmountGrantedAllSets: true,
       MainDiscipline: true,
-      GrantToPerson: {
-        select: { person: { select: { FirstName: true, Surname: true } } },
+      GrantToPersonNetwork: {
+        select: { Person1: { select: { FirstName: true, Surname: true } } },
       },
     },
   });
@@ -55,7 +55,7 @@ export default async function Top5GrantMostAward() {
                 <TableCell>{grant.GrantNumber}</TableCell>
                 <TableCell>
                   {grant.Institute ||
-                    `${grant.GrantToPerson[0].person.FirstName} ${grant.GrantToPerson[0].person.Surname}`}
+                    `${grant.GrantToPersonNetwork[0].Person1.FirstName} ${grant.GrantToPersonNetwork[0].Person1.Surname}`}
                 </TableCell>
                 <TableCell>{grant.MainDiscipline}</TableCell>
                 <TableCell className="text-right">
