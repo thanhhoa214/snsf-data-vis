@@ -7,6 +7,7 @@ import { getStatistics } from "../actions/snsf";
 import MapChart from "./MapChart";
 import { NetworkGraphFilterProps } from "./NetworkGraphFilter";
 import Top10FundedCountries from "./Top10FundedCountries";
+import Top10FundedDisciplines from "./Top10FundedDisciplines";
 import Top5GrantMostAward from "./Top5GrantMostAward";
 
 const DynamicNetworkGraphSection = dynamic(
@@ -57,8 +58,13 @@ export default async function Page() {
         filterResponse={filterResponse}
       />
       <MapChart />
-      <Top5GrantMostAward />
-      <Top10FundedCountries />
+      <div className="flex items-start gap-4 *:w-1/2">
+        <Top5GrantMostAward />
+        <div className="space-y-4">
+          <Top10FundedCountries />
+          <Top10FundedDisciplines />
+        </div>
+      </div>
     </main>
   );
 }

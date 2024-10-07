@@ -40,13 +40,13 @@ export default async function Top5GrantMostAward() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
+        <Table className="text-xs">
           <TableHeader>
             <TableRow>
-              <TableHead>Grant Number</TableHead>
-              <TableHead>Institute or Researcher Names</TableHead>
+              <TableHead>Grant</TableHead>
+              <TableHead>Institute/Researcher Name</TableHead>
               <TableHead>Research Field</TableHead>
-              <TableHead className="text-right">Award Amount</TableHead>
+              <TableHead className="text-right">Award</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

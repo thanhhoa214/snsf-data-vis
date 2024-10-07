@@ -5,17 +5,18 @@ const MapChart = () => {
   return (
     <ComposableMap>
       <Geographies geography="/features.json">
-        {({ geographies }) =>
-          geographies.map((geo) => (
+        {({ geographies }) => {
+          return geographies.map((geo) => (
             <Geography
               key={geo.rsmKey}
               geography={geo}
               fill="#00000010"
               stroke="#000000"
+              xlinkTitle={geo.rsmKey}
               className="focus-within:outline-none focus-within:fill-red-400"
             />
-          ))
-        }
+          ));
+        }}
       </Geographies>
     </ComposableMap>
   );

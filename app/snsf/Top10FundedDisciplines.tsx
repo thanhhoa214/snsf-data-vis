@@ -13,25 +13,25 @@ const chartConfig = {
   amount: { label: "Amount", color: "hsl(var(--chart-1))" },
 } satisfies ChartConfig;
 
-export default async function Top10FundedCountries() {
-  const top10FundedCountries = await prisma.grant.groupBy({
-    by: ["InstituteCountry"],
+export default async function Top10FundedDisciplines() {
+  const top10FundedDisciplines = await prisma.grant.groupBy({
+    by: ["MainDiscipline"],
     _sum: { AmountGrantedAllSets: true },
     orderBy: { _sum: { AmountGrantedAllSets: "desc" } },
     take: 10,
   });
 
-  const data = top10FundedCountries.map((country) => ({
-    label: country.InstituteCountry || "Other countries",
+  const data = top10FundedDisciplines.map((country) => ({
+    label: country.MainDiscipline || "Other countries",
     amount: country._sum.AmountGrantedAllSets,
   }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 10 Funded Countries</CardTitle>
+        <CardTitle>Top 10 Funded Disciplines</CardTitle>
         <CardDescription>
-          Top 10 countries that received the most funding
+          Top 10 disciplines that received the most funding
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -65,7 +65,7 @@ export default function NetworkGraphFilter({
         <span
           id="select-grant"
           onClick={() => setShowGrantSelect(true)}
-          className="px-2 py-1 border rounded-lg cursor-pointer"
+          className="px-2 py-1 border rounded-lg cursor-pointer text-sm line-clamp-2"
         >
           {selectedGrant
             ? `[${selectedGrant.Title}] ${selectedGrant.Title}`
@@ -75,7 +75,7 @@ export default function NetworkGraphFilter({
         <span
           id="select-person"
           onClick={() => setShowPersonSelect(true)}
-          className="px-2 py-1 border rounded-lg cursor-pointer"
+          className="px-2 py-1 border rounded-lg cursor-pointer text-sm line-clamp-2"
         >
           {selectedPerson
             ? `[${selectedPerson.PersonNumber}] ${

@@ -34,7 +34,7 @@ export default function ColumnChart<T>({
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={<ChartTooltipContent hideIndicator />}
         />
         <Bar dataKey="amount" fill="var(--color-amount)" radius={8}>
           <LabelList
