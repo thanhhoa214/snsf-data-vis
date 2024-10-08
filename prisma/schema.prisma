@@ -39,6 +39,7 @@ model Grant {
   TitleEnglish               String?
 
   GrantToPersonNetwork GrantToPersonNetwork[]
+  GrantDateRange       GrantDateRange[]
 }
 
 model GrantByPersonByDate {
@@ -55,6 +56,8 @@ model GrantDateRange {
   YearlyAvg      Float
   DurationYears  Int
   DateList       String?
+
+  grant Grant @relation(fields: [GrantNumber], references: [GrantNumber])
 }
 
 model GrantToDiscipline {

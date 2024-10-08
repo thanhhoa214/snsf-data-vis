@@ -10,20 +10,14 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 export default function ColumnChart<T>({
   chartData,
-  chartConfig,
+  chartConfig = { amount: { label: "Amount", color: "hsl(var(--chart-1))" } },
 }: {
   chartData: T[];
-  chartConfig: ChartConfig;
+  chartConfig?: ChartConfig;
 }) {
   return (
     <ChartContainer config={chartConfig}>
-      <BarChart
-        accessibilityLayer
-        data={chartData}
-        margin={{
-          top: 20,
-        }}
-      >
+      <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="label"
