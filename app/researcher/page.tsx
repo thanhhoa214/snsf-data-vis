@@ -11,9 +11,9 @@ import Top5GrantsByInsititue from "./Top5GrantsByInsititue";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { person_no: string };
+  searchParams: { PersonNumber: string };
 }) {
-  const personNo = Number(searchParams.person_no ?? "0");
+  const personNo = Number(searchParams.PersonNumber ?? "0");
   const researcher = await prisma.person.findFirst({
     where: personNo ? { PersonNumber: personNo } : {},
     include: {
