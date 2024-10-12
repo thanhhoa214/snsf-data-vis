@@ -17,33 +17,30 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 export const description = "A simple area chart";
 
-const chartConfig = {
-  amount: {
-    label: "Amount",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
-
 export interface FundTrendForDisciplineProps {
-  disciplineNo: number;
-  disciplineName: string;
-  chartData: Array<{ year: string; amount: number }>;
+  disciplines: {
+    MainDiscipline: string;
+    MainDisciplineNumber: number;
+  }[];
+  chartData: Array<{ year: string } & Record<string, string>>;
 }
 
 export default function FundTrendForDiscipline({
-  disciplineNo,
-  disciplineName,
+  disciplines,
   chartData,
 }: FundTrendForDisciplineProps) {
+  const chartConfig = disciplines.reduce((acc, discipline, i) => {
+    acc[discipline.MainDisciplineNumber] = {
+      label: discipline.MainDiscipline,
+      color: `hsl(var(--chart-${i + 1}))`,
+    };
+    return acc;
+  }, {} as ChartConfig);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Funding Trends for {disciplineName} ({disciplineNo})
-        </CardTitle>
-        <CardDescription>
-          The funding trends for {disciplineName} over years
-        </CardDescription>
+        <CardTitle>Funding Trends for disciplines</CardTitle>
+        <CardDescription>The funding trends over years</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -63,13 +60,16 @@ export default function FundTrendForDiscipline({
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
-            <Area
-              dataKey="amount"
-              type="natural"
-              fill="var(--color-amount)"
-              fillOpacity={0.4}
-              stroke="var(--color-amount)"
-            />
+            {disciplines.map((discipline) => (
+              <Area
+                key={discipline.MainDisciplineNumber}
+                dataKey={discipline.MainDisciplineNumber}
+                type="natural"
+                fill={`var(--color-${discipline.MainDisciplineNumber})`}
+                fillOpacity={0.4}
+                stroke={`var(--color-${discipline.MainDisciplineNumber})`}
+              />
+            ))}
           </AreaChart>
         </ChartContainer>
       </CardContent>

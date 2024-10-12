@@ -32,9 +32,9 @@ export default async function Top5GrantsByInsititue() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 5 Grants Vs Institue</CardTitle>
+        <CardTitle>Top 5 Grants Vs Institute</CardTitle>
         <CardDescription>
-          Top 5 institues that received the highest number of grants
+          Top 5 institutes that received the highest number of grants
         </CardDescription>
       </CardHeader>
       <CardContent>

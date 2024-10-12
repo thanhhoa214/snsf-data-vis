@@ -1,11 +1,5 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import {
   getGrantToPersonNetwork,
@@ -36,7 +30,6 @@ export default function NetworkGraphSection({
       grantNo: grant,
       personNo: person,
     });
-    console.log(network);
 
     setGraphResponse(network);
     setIsLoading(false);
@@ -46,7 +39,6 @@ export default function NetworkGraphSection({
     <Card>
       <CardHeader>
         <CardTitle>Granted Researcher Collaboration Network</CardTitle>
-        <CardDescription>Card Description</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex gap-4">
