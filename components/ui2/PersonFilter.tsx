@@ -1,77 +1,78 @@
 "use client";
-import { searchPerson } from "@/app/actions/persons";
 import {
   CommandDialog,
   CommandEmpty,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Person } from "@prisma/client";
 import { useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
-export default function PersonFilter({
-  serverPersons,
-  initPerson,
+export default function PersonFilter<T>({
+  serverItems,
+  initItem,
+  itemKey,
+  itemLabel,
+  onSearch,
 }: {
-  serverPersons: Person[];
-  initPerson: Person | null;
+  serverItems: T[];
+  initItem: T | null;
+  itemKey: keyof T; // Key for the unique identifier
+  itemLabel: keyof T; // Key for the label display
+  onSearch: (search: string) => Promise<T[]>;
 }) {
-  const [persons, setPersons] = useState(serverPersons);
-  const [showPersonSelect, setShowPersonSelect] = useState(false);
-  const [personSearch, setPersonSearch] = useState("");
+  const [items, setItems] = useState(serverItems);
+  const [showItemSelect, setShowItemSelect] = useState(false);
+  const [itemSearch, setItemSearch] = useState("");
 
-  const [selectedPerson, setSelectedPerson] = useState<Person | null>(
-    initPerson
-  );
+  const [selectedItem, setSelectedItem] = useState<T | null>(initItem);
 
-  const onSearchPerson = useDebounceCallback((search: string) => {
-    searchPerson(search).then(setPersons);
+  const onSearchItem = useDebounceCallback((search: string) => {
+    onSearch(search).then(setItems); // Adjust this to your search function
   }, 500);
 
   return (
     <>
       <input
-        name="person_no"
-        value={selectedPerson ? selectedPerson.PersonNumber : ""}
+        name={itemKey as string}
+        value={selectedItem ? (selectedItem[itemKey] as string) : ""}
         readOnly
         className="hidden"
       />
       <span
-        id="select-person"
-        onClick={() => setShowPersonSelect(true)}
+        id="select-item"
+        onClick={() => setShowItemSelect(true)}
         className="px-2 py-1 border rounded-lg cursor-pointer text-sm line-clamp-2 hover:bg-gray-100"
       >
-        {selectedPerson
-          ? `[${selectedPerson.PersonNumber}] ${
-              selectedPerson.FirstName || ""
-            } ${selectedPerson.Surname}`
-          : "Select a person"}
+        {selectedItem
+          ? `[${selectedItem[itemKey]}] ${selectedItem[itemLabel] || ""}`
+          : "Select an item"}
       </span>
 
-      <CommandDialog open={showPersonSelect} onOpenChange={setShowPersonSelect}>
+      <CommandDialog open={showItemSelect} onOpenChange={setShowItemSelect}>
         <input
           placeholder="Type a command or search..."
-          value={personSearch}
+          value={itemSearch}
           onChange={(e) => {
-            setPersonSearch(e.target.value);
-            onSearchPerson(e.target.value);
+            setItemSearch(e.target.value);
+            onSearchItem(e.target.value);
           }}
           className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 px-2"
         />
         <CommandList>
-          <CommandEmpty>No people found.</CommandEmpty>
+          <CommandEmpty>No items found.</CommandEmpty>
 
-          {persons.map((person) => (
+          {items.map((item) => (
             <CommandItem
-              key={person.PersonNumber}
+              key={item[itemKey] as string}
               onSelect={() => {
-                setSelectedPerson(person);
-                setShowPersonSelect(false);
+                setSelectedItem(item);
+                setShowItemSelect(false);
               }}
+              className="items-start"
             >
-              [<strong>{person.PersonNumber}</strong>] {person.FirstName}{" "}
-              {person.Surname}
+              <strong className="mr-1">[{item[itemKey] as string}]</strong>{" "}
+              <span className="leading-4">{item[itemLabel] as string}</span>
             </CommandItem>
           ))}
         </CommandList>

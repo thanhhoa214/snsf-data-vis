@@ -1,3 +1,4 @@
+import Navbar from "@/components/ui2/Navbar";
 import { shortenNumber } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { searchGrant } from "../actions/grant";
@@ -42,7 +43,8 @@ export default async function Page() {
 
   return (
     <main className="space-y-4">
-      <h1 className="mb-4">SNSF Dashboard</h1>
+      <Navbar />
+      <h1 className="mb-4 text-center">SNSF Dashboard</h1>
 
       <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-5">
         {data.map(({ title, value }) => (

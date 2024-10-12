@@ -40,6 +40,8 @@ model Grant {
 
   GrantToPersonNetwork GrantToPersonNetwork[]
   GrantDateRange       GrantDateRange[]
+
+  institute Institute? @relation(fields: [Institute], references: [Institute])
 }
 
 model GrantByPersonByDate {
@@ -77,9 +79,11 @@ model GrantToKeyword {
 model Institute {
   InstituteNumber     Int     @id @default(autoincrement())
   index               Int
-  Institute           String
+  Institute           String  @unique
   InstituteCountry    String?
   ResearchInstitution String?
+
+  grants Grant[]
 }
 
 model OutputAward {

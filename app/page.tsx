@@ -1,24 +1,6 @@
+import { links } from "@/components/ui2/Navbar";
 import { cn } from "@/lib/utils";
-import { Building2, CircleUserRound, School } from "lucide-react";
 import Link from "next/link";
-
-const links = [
-  {
-    label: "Researcher",
-    icon: <CircleUserRound />,
-    className: "border-red-200 bg-red-100 hover:bg-red-200",
-  },
-  {
-    label: "Institute",
-    icon: <School />,
-    className: "border-blue-200 bg-blue-100 hover:bg-blue-200",
-  },
-  {
-    label: "SNSF",
-    icon: <Building2 />,
-    className: "border-green-200 bg-green-100 hover:bg-green-200",
-  },
-];
 
 export default function Home() {
   return (

@@ -1,8 +1,8 @@
+import Navbar from "@/components/ui2/Navbar";
 import { prisma } from "@/lib/prisma/client";
+import { getDisciplineLineData } from "@/lib/prisma/discipline";
 import { cn } from "@/lib/utils";
-import FundTrendForDiscipline, {
-  FundTrendForDisciplineProps,
-} from "./FundTrendForDiscipline";
+import FundTrendForDiscipline from "../../components/ui2/FundTrendForDiscipline";
 import ResearcherFilter from "./ResearcherFilter";
 import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";
@@ -93,38 +93,12 @@ export default async function Page({
     return <main>No grants found for researcher</main>;
   }
 
-  const disciplineSelectors = disciplines
-    .map(
-      ({ MainDisciplineNumber }) =>
-        `SUM(CASE WHEN MainDisciplineNumber = '${MainDisciplineNumber}' THEN AmountGrantedAllSets ELSE 0 END) AS '${MainDisciplineNumber}'`
-    )
-    .join(", ");
-  const grantsByYear = (await prisma.$queryRawUnsafe(
-    `SELECT 
-          CAST(SUBSTR(GrantStartDate, -4) AS INTEGER) AS year,
-          ${disciplineSelectors}
-        FROM 
-          Grant
-        GROUP BY 
-          year
-        ORDER BY 
-          year ASC;`
-  )) as FundTrendForDisciplineProps["chartData"];
-
-  const chartData = grantsByYear.map((item) => ({
-    year: item.year.toString(),
-    ...disciplines.reduce(
-      (acc, { MainDisciplineNumber }) => ({
-        ...acc,
-        [MainDisciplineNumber]: parseInt(item[MainDisciplineNumber]),
-      }),
-      {}
-    ),
-  }));
+  const chartData = await getDisciplineLineData(disciplines);
 
   return (
     <main className="space-y-4">
-      <h1 className="mb-4">Researcher Dashboard</h1>
+      <Navbar />
+      <h1 className="mb-4 text-center">Researcher Dashboard</h1>
       <ResearcherFilter personNo={personNo} />
 
       <section>
