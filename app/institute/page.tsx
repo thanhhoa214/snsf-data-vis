@@ -8,7 +8,7 @@ export default async function Home({
   searchParams: { InstituteNumber: string };
 }) {
   const instituteNo = Number(searchParams.InstituteNumber ?? "0");
-  const institute = await getInstituteByNumber(instituteNo);
+  const institute = await getInstituteByNumber(0);
 
   if (!institute) {
     return <main>No institute found</main>;
@@ -18,6 +18,7 @@ export default async function Home({
     <main className="space-y-4">
       <Navbar />
       <h1 className="mb-4 text-center">Institute Dashboard</h1>
+      search params: {JSON.stringify(searchParams)} {instituteNo}
       {/* <PersonFilter
         serverItems={await searchInstitutes()}
         initItem={institute}
