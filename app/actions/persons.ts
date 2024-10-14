@@ -17,3 +17,35 @@ export async function searchPerson(search = "") {
     take: 20,
   });
 }
+
+export async function getPersonByNumber(personNo: number) {
+  return prisma.person.findFirst({
+    where: personNo ? { PersonNumber: personNo } : {},
+    include: {
+      GrantToPersonNetwork1: {
+        select: {
+          Grant: {
+            select: {
+              GrantNumber: true,
+              Title: true,
+              MainDisciplineNumber: true,
+              MainDiscipline: true,
+            },
+          },
+        },
+      },
+      GrantToPersonNetwork2: {
+        select: {
+          Grant: {
+            select: {
+              GrantNumber: true,
+              Title: true,
+              MainDisciplineNumber: true,
+              MainDiscipline: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

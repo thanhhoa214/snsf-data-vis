@@ -12,15 +12,15 @@ import { useDebounceCallback } from "usehooks-ts";
 
 export default function PersonFilter<T, U extends keyof T>({
   serverItems,
-  initItem,
+  initItem = null,
   itemKey,
   itemLabel,
   labelFunc,
   onSearch,
 }: {
   serverItems: T[];
-  initItem: T | null;
-  itemKey: U; // Key for the unique identifier
+  initItem?: T | null;
+  itemKey: U;
   onSearch: (search: string) => Promise<T[]>;
 } & (
   | { itemLabel: keyof T; labelFunc?: never }
