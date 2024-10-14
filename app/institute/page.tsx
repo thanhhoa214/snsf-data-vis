@@ -1,30 +1,60 @@
-import { links } from "@/components/ui2/Navbar";
+// import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
+import Navbar from "@/components/ui2/Navbar";
 import { prisma } from "@/lib/prisma/client";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+// import { getDisciplineLineData } from "../actions/discipline";
+// import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
-export default async function Home() {
-  const grantCount = await prisma.grant.count();
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { InstituteNumber: string };
+}) {
+  const instituteNo = Number(searchParams.InstituteNumber ?? "0");
+  const grantCount = prisma.institute.count();
+  // const institute = await getInstituteByNumber(instituteNo);
+
+  // if (!institute) {
+  //   return <main>No institute found</main>;
+  // }
+
+  // const uniqueDisciplines: Array<{
+  //   MainDiscipline: string;
+  //   MainDisciplineNumber: number;
+  // }> = [];
+  // institute.grants.forEach((grant) => {
+  //   if (
+  //     !uniqueDisciplines.some(
+  //       (discipline) =>
+  //         discipline.MainDisciplineNumber === grant.MainDisciplineNumber
+  //     )
+  //   ) {
+  //     uniqueDisciplines.push({
+  //       MainDiscipline: grant.MainDiscipline,
+  //       MainDisciplineNumber: grant.MainDisciplineNumber,
+  //     });
+  //   }
+  // });
+  // const chartData = await getDisciplineLineData(uniqueDisciplines);
+
   return (
-    <main className="min-h-dvh flex flex-col items-center gap-4 justify-center">
-      <h1>Choose your dashboard</h1>
-      {grantCount}
-      <ul className="flex justify-center items-center gap-8">
-        {links.map(({ label, icon, className }) => (
-          <li key={label}>
-            <Link
-              href={`/${label.toLowerCase()}`}
-              className={cn(
-                "flex flex-col justify-center items-center p-4 w-40 aspect-video border rounded-xl",
-                className
-              )}
-            >
-              {icon}
-              <strong>{label}</strong>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <main className="space-y-4">
+      <Navbar />
+      <h1 className="mb-4 text-center">Institute Dashboard</h1>
+      <p>
+        Insti No: {instituteNo} {grantCount}
+      </p>
+      {/* <PersonFilter
+        serverItems={await searchInstitutes()}
+        initItem={institute}
+        itemKey="InstituteNumber"
+        itemLabel="Institute"
+        onSearch={searchInstitutes}
+      /> */}
+      {/* <Top5DisciplinesHighestAwards institute={institute.Institute} />
+      <FundTrendForDiscipline
+        disciplines={uniqueDisciplines}
+        chartData={chartData}
+      /> */}
     </main>
   );
 }
