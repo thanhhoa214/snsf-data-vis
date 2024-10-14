@@ -1,8 +1,6 @@
 // import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
 import Navbar from "@/components/ui2/Navbar";
-import PersonFilter from "@/components/ui2/PersonFilter";
 // import { getDisciplineLineData } from "../actions/discipline";
-import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
 // import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
 export default async function Page({
@@ -11,11 +9,11 @@ export default async function Page({
   searchParams: { InstituteNumber: string };
 }) {
   const instituteNo = Number(searchParams.InstituteNumber ?? "0");
-  const institute = await getInstituteByNumber(instituteNo);
+  // const institute = await getInstituteByNumber(instituteNo);
 
-  if (!institute) {
-    return <main>No institute found</main>;
-  }
+  // if (!institute) {
+  //   return <main>No institute found</main>;
+  // }
 
   // const uniqueDisciplines: Array<{
   //   MainDiscipline: string;
@@ -40,14 +38,14 @@ export default async function Page({
     <main className="space-y-4">
       <Navbar />
       <h1 className="mb-4 text-center">Institute Dashboard</h1>
-
-      <PersonFilter
+      <p>Insti No: {instituteNo}</p>
+      {/* <PersonFilter
         serverItems={await searchInstitutes()}
         initItem={institute}
         itemKey="InstituteNumber"
         itemLabel="Institute"
         onSearch={searchInstitutes}
-      />
+      /> */}
       {/* <Top5DisciplinesHighestAwards institute={institute.Institute} />
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}
