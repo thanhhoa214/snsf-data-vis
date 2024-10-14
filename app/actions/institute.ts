@@ -17,3 +17,17 @@ export async function searchInstitutes(search = "") {
     take: 20,
   });
 }
+
+export async function getInstituteByNumber(instituteNo: number) {
+  return prisma.institute.findFirst({
+    where: instituteNo ? { InstituteNumber: instituteNo } : {},
+    include: {
+      grants: {
+        select: {
+          MainDiscipline: true,
+          MainDisciplineNumber: true,
+        },
+      },
+    },
+  });
+}

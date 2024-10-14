@@ -1,9 +1,9 @@
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
 import { prisma } from "@/lib/prisma/client";
-import { getDisciplineLineData } from "@/lib/prisma/discipline";
 import { cn } from "@/lib/utils";
 import FundTrendForDiscipline from "../../components/ui2/FundTrendForDiscipline";
+import { getDisciplineLineData } from "../actions/discipline";
 import { searchPerson } from "../actions/persons";
 import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";

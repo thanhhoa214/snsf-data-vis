@@ -1,4 +1,5 @@
-import { prisma } from "./client";
+"use server";
+import { prisma } from "@/lib/prisma/client";
 
 export type DisciplineLineChartData = Array<
   { year: string } & Record<string, string>

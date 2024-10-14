@@ -1,9 +1,8 @@
 import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
-import { prisma } from "@/lib/prisma/client";
-import { getDisciplineLineData } from "@/lib/prisma/discipline";
-import { searchInstitutes } from "../actions/institute";
+import { getDisciplineLineData } from "../actions/discipline";
+import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
 import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
 export default async function Page({
@@ -12,17 +11,7 @@ export default async function Page({
   searchParams: { InstituteNumber: string };
 }) {
   const instituteNo = Number(searchParams.InstituteNumber ?? "0");
-  const institute = await prisma.institute.findFirst({
-    where: instituteNo ? { InstituteNumber: instituteNo } : {},
-    include: {
-      grants: {
-        select: {
-          MainDiscipline: true,
-          MainDisciplineNumber: true,
-        },
-      },
-    },
-  });
+  const institute = await getInstituteByNumber(instituteNo);
 
   if (!institute) {
     return <main>No institute found</main>;
