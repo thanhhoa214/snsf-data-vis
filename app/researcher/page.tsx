@@ -1,5 +1,7 @@
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
+import { Loader } from "lucide-react";
+import { Suspense } from "react";
 import { searchPerson } from "../actions/persons";
 import Container from "./Container";
 
@@ -15,7 +17,16 @@ export default async function Page() {
         itemLabel="Surname"
         onSearch={searchPerson}
       />
-      <Container />
+      <Suspense
+        fallback={
+          <div className="h-80 w-full flex flex-col justify-center items-center">
+            <Loader />
+            Loading...
+          </div>
+        }
+      >
+        <Container />
+      </Suspense>
     </main>
   );
 }

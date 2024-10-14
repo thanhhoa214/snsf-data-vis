@@ -10,8 +10,7 @@ import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";
 import Top5GrantsByInsititue from "./Top5GrantsByInsititue";
 
-const useData = () => {
-  const personNo = useSearchParams().get("personNo");
+const useData = (personNo: number) => {
   const [researcher, setResearcher] =
     useState<Prisma.PromiseReturnType<typeof getPersonByNumber>>();
   const grantDisciplines = useMemo(() => {
@@ -53,7 +52,7 @@ const useData = () => {
   >([]);
 
   useEffect(() => {
-    getPersonByNumber(personNo ? parseInt(personNo) : 0).then(setResearcher);
+    getPersonByNumber(personNo).then(setResearcher);
   }, [personNo]);
 
   useEffect(() => {
@@ -68,8 +67,10 @@ const useData = () => {
 };
 
 export default function Container() {
-  const { researcher, uniqueGrants, disciplines, disciplineLineData } =
-    useData();
+  const personNo = useSearchParams().get("personNo");
+  const { researcher, uniqueGrants, disciplines, disciplineLineData } = useData(
+    personNo ? parseInt(personNo) : 0
+  );
 
   if (!researcher) return null;
 
