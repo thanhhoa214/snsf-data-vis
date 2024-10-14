@@ -10,7 +10,7 @@ export default async function Page({
   searchParams: { InstituteNumber: string };
 }) {
   const instituteNo = Number(searchParams.InstituteNumber ?? "0");
-  const grantCount = prisma.grant.count();
+  const grantCount = prisma.institute.count();
   // const institute = await getInstituteByNumber(instituteNo);
 
   // if (!institute) {
