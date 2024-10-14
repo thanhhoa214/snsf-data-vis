@@ -1,60 +1,31 @@
-// import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
-import Navbar from "@/components/ui2/Navbar";
+import { links } from "@/components/ui2/Navbar";
 import { prisma } from "@/lib/prisma/client";
-// import { getDisciplineLineData } from "../actions/discipline";
-// import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { InstituteNumber: string };
-}) {
-  const instituteNo = Number(searchParams.InstituteNumber ?? "0");
-  const grantCount = prisma.institute.count();
-  // const institute = await getInstituteByNumber(instituteNo);
-
-  // if (!institute) {
-  //   return <main>No institute found</main>;
-  // }
-
-  // const uniqueDisciplines: Array<{
-  //   MainDiscipline: string;
-  //   MainDisciplineNumber: number;
-  // }> = [];
-  // institute.grants.forEach((grant) => {
-  //   if (
-  //     !uniqueDisciplines.some(
-  //       (discipline) =>
-  //         discipline.MainDisciplineNumber === grant.MainDisciplineNumber
-  //     )
-  //   ) {
-  //     uniqueDisciplines.push({
-  //       MainDiscipline: grant.MainDiscipline,
-  //       MainDisciplineNumber: grant.MainDisciplineNumber,
-  //     });
-  //   }
-  // });
-  // const chartData = await getDisciplineLineData(uniqueDisciplines);
-
+export default async function Home() {
+  const grantCount = await prisma.grant.count();
+  const ins = prisma.institute.count();
   return (
-    <main className="space-y-4">
-      <Navbar />
-      <h1 className="mb-4 text-center">Institute Dashboard</h1>
-      <p>
-        Insti No: {instituteNo} {grantCount}
-      </p>
-      {/* <PersonFilter
-        serverItems={await searchInstitutes()}
-        initItem={institute}
-        itemKey="InstituteNumber"
-        itemLabel="Institute"
-        onSearch={searchInstitutes}
-      /> */}
-      {/* <Top5DisciplinesHighestAwards institute={institute.Institute} />
-      <FundTrendForDiscipline
-        disciplines={uniqueDisciplines}
-        chartData={chartData}
-      /> */}
+    <main className="min-h-dvh flex flex-col items-center gap-4 justify-center">
+      <h1>Choose your dashboard</h1>
+      {grantCount} {ins}
+      <ul className="flex justify-center items-center gap-8">
+        {links.map(({ label, icon, className }) => (
+          <li key={label}>
+            <Link
+              href={`/${label.toLowerCase()}`}
+              className={cn(
+                "flex flex-col justify-center items-center p-4 w-40 aspect-video border rounded-xl",
+                className
+              )}
+            >
+              {icon}
+              <strong>{label}</strong>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
