@@ -1,9 +1,9 @@
-import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
+// import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
-import { getDisciplineLineData } from "../actions/discipline";
+// import { getDisciplineLineData } from "../actions/discipline";
 import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
-import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
+// import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
 export default async function Page({
   searchParams,
@@ -17,24 +17,24 @@ export default async function Page({
     return <main>No institute found</main>;
   }
 
-  const uniqueDisciplines: Array<{
-    MainDiscipline: string;
-    MainDisciplineNumber: number;
-  }> = [];
-  institute.grants.forEach((grant) => {
-    if (
-      !uniqueDisciplines.some(
-        (discipline) =>
-          discipline.MainDisciplineNumber === grant.MainDisciplineNumber
-      )
-    ) {
-      uniqueDisciplines.push({
-        MainDiscipline: grant.MainDiscipline,
-        MainDisciplineNumber: grant.MainDisciplineNumber,
-      });
-    }
-  });
-  const chartData = await getDisciplineLineData(uniqueDisciplines);
+  // const uniqueDisciplines: Array<{
+  //   MainDiscipline: string;
+  //   MainDisciplineNumber: number;
+  // }> = [];
+  // institute.grants.forEach((grant) => {
+  //   if (
+  //     !uniqueDisciplines.some(
+  //       (discipline) =>
+  //         discipline.MainDisciplineNumber === grant.MainDisciplineNumber
+  //     )
+  //   ) {
+  //     uniqueDisciplines.push({
+  //       MainDiscipline: grant.MainDiscipline,
+  //       MainDisciplineNumber: grant.MainDisciplineNumber,
+  //     });
+  //   }
+  // });
+  // const chartData = await getDisciplineLineData(uniqueDisciplines);
 
   return (
     <main className="space-y-4">
@@ -48,11 +48,11 @@ export default async function Page({
         itemLabel="Institute"
         onSearch={searchInstitutes}
       />
-      <Top5DisciplinesHighestAwards institute={institute.Institute} />
+      {/* <Top5DisciplinesHighestAwards institute={institute.Institute} />
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}
         chartData={chartData}
-      />
+      /> */}
     </main>
   );
 }
