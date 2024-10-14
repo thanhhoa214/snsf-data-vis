@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -5,25 +6,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { prisma } from "@/lib/prisma/client";
+import { Prisma } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { getTop5DisciplinesByGrantCount } from "../actions/grant";
 import ColumnChart from "../snsf/ColumnChart";
 
-export default async function Top5DisciplinesHighestGrants() {
-  const top6GrantsByDisciplineCount = await prisma.grant.groupBy({
-    by: ["MainDiscipline"],
-    _count: { GrantNumber: true },
-    orderBy: { _count: { GrantNumber: "desc" } },
-    take: 6,
-  });
-  const top5 = top6GrantsByDisciplineCount
-    .filter((item) => !!item.MainDiscipline)
-    .slice(0, 5);
+const useTop5DisciplinesByGrantCount = () => {
+  const [data, setData] = useState<
+    Prisma.PromiseReturnType<typeof getTop5DisciplinesByGrantCount>
+  >([]);
 
-  const data = top5.map((item) => ({
-    label: item.MainDiscipline,
-    amount: item._count.GrantNumber,
-  }));
+  useEffect(() => {
+    getTop5DisciplinesByGrantCount().then(setData);
+  }, []);
 
+  return data;
+};
+
+export default function Top5DisciplinesHighestGrants() {
+  const data = useTop5DisciplinesByGrantCount();
   return (
     <Card>
       <CardHeader>

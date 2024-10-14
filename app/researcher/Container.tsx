@@ -10,6 +10,63 @@ import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";
 import Top5GrantsByInsititue from "./Top5GrantsByInsititue";
 
+export default function Container() {
+  const personNo = useSearchParams().get("PersonNumber");
+  const { researcher, uniqueGrants, disciplines, disciplineLineData } = useData(
+    personNo ? parseInt(personNo) : 0
+  );
+
+  if (!researcher) return null;
+
+  return (
+    <>
+      <section>
+        <h3>Grants</h3>
+        <ul className="list-decimal list-inside mb-2">
+          {uniqueGrants.map((grant) => (
+            <li key={grant.GrantNumber}>
+              {grant.Title} ({grant.MainDiscipline})
+            </li>
+          ))}
+        </ul>
+
+        <h3>Disciplines </h3>
+        <ul className="flex gap-4">
+          {disciplines.map((discipline, i) => (
+            <li
+              key={discipline.MainDisciplineNumber}
+              className={cn(i < disciplines.length - 1 && "border-r pr-4")}
+            >
+              {discipline.MainDiscipline}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h3>Institute</h3>
+        {researcher.InstituteNumber && (
+          <p>
+            [{researcher.InstituteNumber}] {researcher.Institute}
+          </p>
+        )}
+      </section>
+
+      <section className="grid grid-cols-3 gap-4">
+        {researcher?.Institute && (
+          <Top5GrantsByInsititue institute={researcher.Institute} />
+        )}
+        <Top5DisciplinesFewestGrants />
+        <Top5DisciplinesHighestGrants />
+      </section>
+      <FundTrendForDiscipline
+        disciplines={disciplines}
+        chartData={disciplineLineData}
+      />
+    </>
+  );
+}
+
 const useData = (personNo: number) => {
   const [researcher, setResearcher] =
     useState<Prisma.PromiseReturnType<typeof getPersonByNumber>>();
@@ -65,60 +122,3 @@ const useData = (personNo: number) => {
 
   return { researcher, ...grantDisciplines, disciplineLineData };
 };
-
-export default function Container() {
-  const personNo = useSearchParams().get("personNo");
-  const { researcher, uniqueGrants, disciplines, disciplineLineData } = useData(
-    personNo ? parseInt(personNo) : 0
-  );
-
-  if (!researcher) return null;
-
-  return (
-    <>
-      <section>
-        <h3>Grants</h3>
-        <ul className="list-decimal list-inside mb-2">
-          {uniqueGrants.map((grant) => (
-            <li key={grant.GrantNumber}>
-              {grant.Title} ({grant.MainDiscipline})
-            </li>
-          ))}
-        </ul>
-
-        <h3>Disciplines </h3>
-        <ul className="flex gap-4">
-          {disciplines.map((discipline, i) => (
-            <li
-              key={discipline.MainDisciplineNumber}
-              className={cn(i < disciplines.length - 1 && "border-r pr-4")}
-            >
-              {discipline.MainDiscipline}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <h3>Institute</h3>
-        {researcher.InstituteNumber && (
-          <p>
-            [{researcher.InstituteNumber}] {researcher.Institute}
-          </p>
-        )}
-      </section>
-
-      <section className="grid grid-cols-3 gap-4">
-        {researcher.InstituteNumber && (
-          <Top5GrantsByInsititue institute={researcher.Institute} />
-        )}
-        <Top5DisciplinesFewestGrants />
-        <Top5DisciplinesHighestGrants />
-      </section>
-      <FundTrendForDiscipline
-        disciplines={disciplines}
-        chartData={disciplineLineData}
-      />
-    </>
-  );
-}

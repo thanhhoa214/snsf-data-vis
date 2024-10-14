@@ -13,7 +13,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn, shortenNumber } from "@/lib/utils";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Checkbox } from "../ui/checkbox";
 
@@ -33,7 +33,7 @@ export default function FundTrendForDiscipline({
 }: FundTrendForDisciplineProps) {
   const [visibleDisciplineNumbers, setVisibleDisciplineNumbers] = useState<
     number[]
-  >(disciplines.map((d) => d.MainDisciplineNumber)); // Track visible disciplines
+  >(disciplines.map((d) => d.MainDisciplineNumber));
 
   const chartConfig = disciplines.reduce((acc, discipline, i) => {
     acc[discipline.MainDisciplineNumber] = {
@@ -50,6 +50,10 @@ export default function FundTrendForDiscipline({
         : [...prev, number]
     );
   };
+
+  useEffect(() => {
+    setVisibleDisciplineNumbers(disciplines.map((d) => d.MainDisciplineNumber));
+  }, [disciplines]);
 
   return (
     <Card>

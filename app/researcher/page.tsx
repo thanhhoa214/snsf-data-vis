@@ -14,13 +14,13 @@ export default async function Page() {
       <PersonFilter
         serverItems={await searchPerson()}
         itemKey="PersonNumber"
-        itemLabel="Surname"
+        labelTemplate="{Surname}, {FirstName}"
         onSearch={searchPerson}
       />
       <Suspense
         fallback={
           <div className="h-80 w-full flex flex-col justify-center items-center">
-            <Loader />
+            <Loader className="animate-spin" />
             Loading...
           </div>
         }

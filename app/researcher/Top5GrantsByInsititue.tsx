@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -6,27 +7,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartConfig } from "@/components/ui/chart";
-import { prisma } from "@/lib/prisma/client";
+import { Prisma } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { getTop5GrantsByInsititue } from "../actions/grant";
 import ColumnChart from "../snsf/ColumnChart";
 
 const chartConfig = {
   amount: { label: "Amount", color: "hsl(var(--chart-1))" },
 } satisfies ChartConfig;
 
-export default async function Top5GrantsByInsititue({
+const useTop5GrantsByInsititue = (institute: string) => {
+  const [data, setData] = useState<
+    Prisma.PromiseReturnType<typeof getTop5GrantsByInsititue>
+  >([]);
+
+  useEffect(() => {
+    getTop5GrantsByInsititue(institute).then(setData);
+  }, [institute]);
+
+  return data;
+};
+
+export default function Top5GrantsByInsititue({
   institute,
 }: {
-  institute: string | null;
+  institute: string;
 }) {
-  const top6GrantsByInsititue = await prisma.grant.findMany({
-    orderBy: { AmountGrantedAllSets: "desc" },
-    where: { Institute: institute },
-    take: 5,
-  });
-  const data = top6GrantsByInsititue.map((item) => ({
-    label: item.Title,
-    amount: item.AmountGrantedAllSets,
-  }));
+  const data = useTop5GrantsByInsititue(institute);
 
   return (
     <Card>
