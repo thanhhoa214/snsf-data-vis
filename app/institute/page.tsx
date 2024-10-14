@@ -1,8 +1,10 @@
 import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
 import Navbar from "@/components/ui2/Navbar";
+import PersonFilter from "@/components/ui2/PersonFilter";
 import { prisma } from "@/lib/prisma/client";
 import { getDisciplineLineData } from "@/lib/prisma/discipline";
-import InstituteFilter from "./InstituteFilter";
+import { searchInstitutes } from "../actions/institute";
+import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
 export default async function Page({
   searchParams,
@@ -49,7 +51,15 @@ export default async function Page({
     <main className="space-y-4">
       <Navbar />
       <h1 className="mb-4 text-center">Institute Dashboard</h1>
-      <InstituteFilter InstituteNumber={instituteNo} />
+
+      <PersonFilter
+        serverItems={await searchInstitutes()}
+        initItem={institute}
+        itemKey="InstituteNumber"
+        itemLabel="Institute"
+        onSearch={searchInstitutes}
+      />
+      <Top5DisciplinesHighestAwards institute={institute.Institute} />
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}
         chartData={chartData}

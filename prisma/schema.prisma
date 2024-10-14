@@ -41,7 +41,8 @@ model Grant {
   GrantToPersonNetwork GrantToPersonNetwork[]
   GrantDateRange       GrantDateRange[]
 
-  institute Institute? @relation(fields: [Institute], references: [Institute])
+  institute   Institute?    @relation(fields: [Institute], references: [Institute])
+  OutputAward OutputAward[]
 }
 
 model GrantByPersonByDate {
@@ -91,6 +92,8 @@ model OutputAward {
   OutputId    String  @id
   Title       String?
   Year        Float?
+
+  grant Grant @relation(fields: [GrantNumber], references: [GrantNumber])
 }
 
 model Person {

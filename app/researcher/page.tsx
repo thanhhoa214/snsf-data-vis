@@ -1,9 +1,10 @@
 import Navbar from "@/components/ui2/Navbar";
+import PersonFilter from "@/components/ui2/PersonFilter";
 import { prisma } from "@/lib/prisma/client";
 import { getDisciplineLineData } from "@/lib/prisma/discipline";
 import { cn } from "@/lib/utils";
 import FundTrendForDiscipline from "../../components/ui2/FundTrendForDiscipline";
-import ResearcherFilter from "./ResearcherFilter";
+import { searchPerson } from "../actions/persons";
 import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";
 import Top5GrantsByInsititue from "./Top5GrantsByInsititue";
@@ -99,7 +100,14 @@ export default async function Page({
     <main className="space-y-4">
       <Navbar />
       <h1 className="mb-4 text-center">Researcher Dashboard</h1>
-      <ResearcherFilter personNo={personNo} />
+
+      <PersonFilter
+        serverItems={await searchPerson()}
+        initItem={researcher}
+        itemKey="PersonNumber"
+        itemLabel="Surname"
+        onSearch={searchPerson}
+      />
 
       <section>
         <h3>Grants</h3>
@@ -124,8 +132,19 @@ export default async function Page({
         </ul>
       </section>
 
+      <section>
+        <h3>Institute</h3>
+        {researcher.InstituteNumber && (
+          <p>
+            [{researcher.InstituteNumber}] {researcher.Institute}
+          </p>
+        )}
+      </section>
+
       <section className="grid grid-cols-3 gap-4">
-        <Top5GrantsByInsititue />
+        {researcher.InstituteNumber && (
+          <Top5GrantsByInsititue institute={researcher.Institute} />
+        )}
         <Top5DisciplinesFewestGrants />
         <Top5DisciplinesHighestGrants />
       </section>

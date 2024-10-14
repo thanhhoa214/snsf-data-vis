@@ -13,28 +13,27 @@ const chartConfig = {
   amount: { label: "Amount", color: "hsl(var(--chart-1))" },
 } satisfies ChartConfig;
 
-export default async function Top5GrantsByInsititue() {
-  const top6GrantsByInsititue = await prisma.grant.groupBy({
-    by: ["Institute"],
-    _count: { GrantNumber: true },
-    orderBy: { _count: { GrantNumber: "desc" } },
-    take: 6,
+export default async function Top5GrantsByInsititue({
+  institute,
+}: {
+  institute: string | null;
+}) {
+  const top6GrantsByInsititue = await prisma.grant.findMany({
+    orderBy: { AmountGrantedAllSets: "desc" },
+    where: { Institute: institute },
+    take: 5,
   });
-  const top5 = top6GrantsByInsititue
-    .filter((item) => !!item.Institute)
-    .slice(0, 5);
-
-  const data = top5.map((item) => ({
-    label: item.Institute || "Other countries",
-    amount: item._count.GrantNumber,
+  const data = top6GrantsByInsititue.map((item) => ({
+    label: item.Title,
+    amount: item.AmountGrantedAllSets,
   }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 5 Grants Vs Institute</CardTitle>
+        <CardTitle>Top 5 Grants in Institute</CardTitle>
         <CardDescription>
-          Top 5 institutes that received the highest number of grants
+          Top 5 grants received the highest amount
         </CardDescription>
       </CardHeader>
       <CardContent>
