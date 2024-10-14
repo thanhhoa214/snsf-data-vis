@@ -42,3 +42,24 @@ export async function getDisciplineLineData(
 
   return chartData as DisciplineLineChartData;
 }
+
+export async function getTop5DisciplinesInstituteByGrantCount(
+  institute: string
+) {
+  const top6GrantsByDisciplineCount = await prisma.grant.groupBy({
+    by: ["MainDiscipline"],
+    _count: { GrantNumber: true },
+    orderBy: { _count: { GrantNumber: "desc" } },
+    take: 6,
+    where: { Institute: institute },
+  });
+  const top5 = top6GrantsByDisciplineCount
+    .filter((item) => !!item.MainDiscipline)
+    .slice(0, 5);
+
+  const data = top5.map((item) => ({
+    label: item.MainDiscipline,
+    amount: item._count.GrantNumber,
+  }));
+  return data;
+}
