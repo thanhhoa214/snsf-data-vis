@@ -1,4 +1,4 @@
-﻿Discipline,Discipline_Level1,Discipline_Level2,DisciplineNumber,DisciplineLevel,ParentDiscipline,ParentDisciplineNumber
+Discipline,Discipline_Level1,Discipline_Level2,DisciplineNumber,DisciplineLevel,ParentDiscipline,ParentDisciplineNumber
 "Sociology, social work, political sciences, media and communication studies, health",Humanities and Social Sciences,"Sociology, social work, political sciences, media and communication studies, health",10600,2,Humanities and Social Sciences,10000
 "Theology & religious studies, history, classical studies, archaeology, prehistory and early history",Humanities and Social Sciences,"Theology & religious studies, history, classical studies, archaeology, prehistory and early history",10100,2,Humanities and Social Sciences,10000
 "Psychology, educational studies",Humanities and Social Sciences,"Psychology, educational studies",10500,2,Humanities and Social Sciences,10000

@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma/client";
+import { getDisciplineLineData } from "./discipline";
 
 export async function searchPerson(search = "") {
   return await prisma.person.findMany({
@@ -19,9 +20,10 @@ export async function searchPerson(search = "") {
 }
 
 export async function getPersonByNumber(personNo: number) {
-  return prisma.person.findFirst({
+  const person = await prisma.person.findFirst({
     where: personNo ? { PersonNumber: personNo } : {},
     include: {
+      institute: { select: { Institute: true } },
       GrantToPersonNetwork1: {
         select: {
           Grant: {
@@ -29,7 +31,6 @@ export async function getPersonByNumber(personNo: number) {
               GrantNumber: true,
               Title: true,
               MainDisciplineNumber: true,
-              MainDiscipline: true,
             },
           },
         },
@@ -41,11 +42,41 @@ export async function getPersonByNumber(personNo: number) {
               GrantNumber: true,
               Title: true,
               MainDisciplineNumber: true,
-              MainDiscipline: true,
             },
           },
         },
       },
     },
   });
+  if (!person) return null;
+  const disciplineNos = person.GrantToPersonNetwork1.map(
+    (net) => net.Grant.MainDisciplineNumber
+  ).concat(
+    person.GrantToPersonNetwork2.map((net) => net.Grant.MainDisciplineNumber)
+  );
+
+  const uniqueDisciplineNos = Array.from(new Set(disciplineNos));
+  const disciplines = await prisma.discipline.findMany({
+    where: { DisciplineNumber: { in: uniqueDisciplineNos } },
+  });
+
+  const disciplineLineData = await getDisciplineLineData(uniqueDisciplineNos);
+
+  const uniqueGrants: {
+    GrantNumber: number;
+    Title: string;
+    MainDisciplineNumber: number;
+  }[] = [];
+  const grants = [
+    ...person.GrantToPersonNetwork1.map((net) => net.Grant),
+    ...person.GrantToPersonNetwork2.map((net) => net.Grant),
+  ];
+
+  for (const grant of grants) {
+    if (!uniqueGrants.some((g) => g.GrantNumber === grant.GrantNumber)) {
+      uniqueGrants.push(grant);
+    }
+  }
+
+  return { researcher: person, disciplines, disciplineLineData, uniqueGrants };
 }

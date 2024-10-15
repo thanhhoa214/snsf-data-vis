@@ -5,15 +5,10 @@ export type DisciplineLineChartData = Array<
   { year: string } & Record<string, string>
 >;
 
-export async function getDisciplineLineData(
-  disciplines: {
-    MainDiscipline: string;
-    MainDisciplineNumber: number;
-  }[]
-) {
-  const disciplineSelectors = disciplines
+export async function getDisciplineLineData(disciplineNos: number[]) {
+  const disciplineSelectors = disciplineNos
     .map(
-      ({ MainDisciplineNumber }) =>
+      (MainDisciplineNumber) =>
         `SUM(CASE WHEN MainDisciplineNumber = '${MainDisciplineNumber}' THEN CAST(AmountGrantedAllSets AS INTEGER) ELSE 0 END) AS '${MainDisciplineNumber}'`
     )
     .join(", ");
@@ -31,8 +26,8 @@ export async function getDisciplineLineData(
 
   const chartData = grantsByYear.map((item) => ({
     year: item.year.toString(),
-    ...disciplines.reduce(
-      (acc, { MainDisciplineNumber }) => ({
+    ...disciplineNos.reduce(
+      (acc, MainDisciplineNumber) => ({
         ...acc,
         [MainDisciplineNumber]: parseInt(item[MainDisciplineNumber]),
       }),
@@ -47,19 +42,33 @@ export async function getTop5DisciplinesInstituteByGrantCount(
   institute: string
 ) {
   const top6GrantsByDisciplineCount = await prisma.grant.groupBy({
-    by: ["MainDiscipline"],
+    by: ["MainDisciplineNumber"],
     _count: { GrantNumber: true },
     orderBy: { _count: { GrantNumber: "desc" } },
     take: 6,
     where: { Institute: institute },
   });
   const top5 = top6GrantsByDisciplineCount
-    .filter((item) => !!item.MainDiscipline)
+    .filter((item) => !!item.MainDisciplineNumber)
     .slice(0, 5);
 
+  const disciplines = await getDisciplinesByDisciplineNumber(
+    top5.map((item) => item.MainDisciplineNumber)
+  );
+
   const data = top5.map((item) => ({
-    label: item.MainDiscipline,
+    label:
+      disciplines.find((d) => d.DisciplineNumber === item.MainDisciplineNumber)
+        ?.Discipline ?? "Unknown",
     amount: item._count.GrantNumber,
   }));
   return data;
+}
+
+export async function getDisciplinesByDisciplineNumber(
+  disciplineNumbers: number[]
+) {
+  return prisma.discipline.findMany({
+    where: { DisciplineNumber: { in: disciplineNumbers } },
+  });
 }
