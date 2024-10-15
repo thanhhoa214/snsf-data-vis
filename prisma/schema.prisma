@@ -39,28 +39,9 @@ model Grant {
   TitleEnglish               String?
 
   GrantToPersonNetwork GrantToPersonNetwork[]
-  GrantDateRange       GrantDateRange[]
 
   institute   Institute?    @relation(fields: [Institute], references: [Institute])
   OutputAward OutputAward[]
-}
-
-model GrantByPersonByDate {
-  PersonNumber Int
-  GrantNumber  Int
-
-  @@id([PersonNumber, GrantNumber])
-}
-
-model GrantDateRange {
-  GrantNumber    Int     @id @default(autoincrement())
-  GrantStartDate String
-  GrantEndDate   String
-  YearlyAvg      Float
-  DurationYears  Int
-  DateList       String?
-
-  grant Grant @relation(fields: [GrantNumber], references: [GrantNumber])
 }
 
 model GrantToDiscipline {
