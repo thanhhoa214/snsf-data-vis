@@ -3,6 +3,7 @@ import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
 import { getDisciplineLineData } from "../actions/discipline";
 import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
+import Researchers from "./Researchers";
 import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
 export default async function Page({
@@ -48,6 +49,7 @@ export default async function Page({
         itemLabel="Institute"
         onSearch={searchInstitutes}
       />
+      <Researchers institute={institute} />
       <Top5DisciplinesHighestAwards institute={institute.Institute} />
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}

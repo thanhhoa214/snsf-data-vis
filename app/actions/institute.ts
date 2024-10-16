@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma/client";
+import { Prisma } from "@prisma/client";
 
 export async function searchInstitutes(search = "") {
   return await prisma.institute.findMany({
@@ -18,6 +19,9 @@ export async function searchInstitutes(search = "") {
   });
 }
 
+export type InstituteByNumber = Prisma.PromiseReturnType<
+  typeof getInstituteByNumber
+>;
 export async function getInstituteByNumber(instituteNo: number) {
   return prisma.institute.findFirst({
     where: instituteNo ? { InstituteNumber: instituteNo } : {},
