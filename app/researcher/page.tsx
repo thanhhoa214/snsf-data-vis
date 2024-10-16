@@ -1,7 +1,8 @@
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
 import { prisma } from "@/lib/prisma/client";
-import { cn } from "@/lib/utils";
+import { cn, shortenNumber } from "@/lib/utils";
+import Link from "next/link";
 import FundTrendForDiscipline from "../../components/ui2/FundTrendForDiscipline";
 import { getDisciplineLineData } from "../actions/discipline";
 import { searchPerson } from "../actions/persons";
@@ -108,6 +109,31 @@ export default async function Page({
         labelTemplate="{Surname}, {FirstName}"
         onSearch={searchPerson}
       />
+      <p className="text-sm text-muted-foreground">
+        <span className="text-foreground font-semibold">
+          {researcher.FirstName} {researcher.Surname}
+        </span>{" "}
+        is a researcher has funded{" "}
+        <span className="text-foreground font-semibold">
+          {shortenNumber(uniqueGrants.length)} grants
+        </span>{" "}
+        in{" "}
+        <span className="text-foreground font-semibold">
+          {shortenNumber(disciplines.length)} disciplines
+        </span>
+        {researcher.Institute && (
+          <>
+            {" "}
+            at{" "}
+            <Link
+              href={`/institute?InstituteNumber=${researcher.InstituteNumber}`}
+              className="text-foreground font-semibold hover:underline underline-offset-4"
+            >
+              {researcher.Institute} ({researcher.InstitutePlace})
+            </Link>
+          </>
+        )}
+      </p>
 
       <section>
         <h3>Grants</h3>
@@ -130,15 +156,6 @@ export default async function Page({
             </li>
           ))}
         </ul>
-      </section>
-
-      <section>
-        <h3>Institute</h3>
-        {researcher.InstituteNumber && (
-          <p>
-            [{researcher.InstituteNumber}] {researcher.Institute}
-          </p>
-        )}
       </section>
 
       <section className="grid grid-cols-3 gap-4">

@@ -32,6 +32,7 @@ export async function getInstituteByNumber(instituteNo: number) {
           MainDisciplineNumber: true,
         },
       },
+      _count: { select: { grants: true, persons: true } },
     },
   });
 }

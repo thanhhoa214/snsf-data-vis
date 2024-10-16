@@ -84,7 +84,8 @@ model Institute {
   InstituteCountry    String?
   ResearchInstitution String?
 
-  grants Grant[]
+  grants  Grant[]
+  persons Person[]
 }
 
 model OutputAward {
@@ -98,7 +99,7 @@ model OutputAward {
 
 model Person {
   PersonNumber          Int                    @id @default(autoincrement())
-  InstituteNumber       Float?
+  InstituteNumber       Int?
   FirstName             String?
   Surname               String
   Gender                String
@@ -107,6 +108,8 @@ model Person {
   ORCID                 String?
   GrantToPersonNetwork1 GrantToPersonNetwork[] @relation("Person1")
   GrantToPersonNetwork2 GrantToPersonNetwork[] @relation("Person2")
+
+  institute Institute? @relation(fields: [InstituteNumber], references: [InstituteNumber])
 }
 
 model GrantToPersonNetwork {

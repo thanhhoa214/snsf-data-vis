@@ -1,6 +1,7 @@
 import FundTrendForDiscipline from "@/components/ui2/FundTrendForDiscipline";
 import Navbar from "@/components/ui2/Navbar";
 import PersonFilter from "@/components/ui2/PersonFilter";
+import { shortenNumber } from "@/lib/utils";
 import { getDisciplineLineData } from "../actions/discipline";
 import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
 import Researchers from "./Researchers";
@@ -49,6 +50,12 @@ export default async function Page({
         itemLabel="Institute"
         onSearch={searchInstitutes}
       />
+      <p className="text-center text-sm text-muted-foreground">
+        {institute.ResearchInstitution && institute.ResearchInstitution + " •"}{" "}
+        {institute.InstituteCountry} • {shortenNumber(institute._count.grants)}{" "}
+        grants • {shortenNumber(institute._count.persons)} researchers
+      </p>
+
       <Researchers institute={institute} />
       <Top5DisciplinesHighestAwards institute={institute.Institute} />
       <FundTrendForDiscipline
