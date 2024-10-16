@@ -105,7 +105,7 @@ export default async function Page({
         serverItems={await searchPerson()}
         initItem={researcher}
         itemKey="PersonNumber"
-        itemLabel="Surname"
+        labelTemplate="{Surname}, {FirstName}"
         onSearch={searchPerson}
       />
 
@@ -142,7 +142,7 @@ export default async function Page({
       </section>
 
       <section className="grid grid-cols-3 gap-4">
-        {researcher.InstituteNumber && (
+        {researcher.Institute && (
           <Top5GrantsByInsititue institute={researcher.Institute} />
         )}
         <Top5DisciplinesFewestGrants />

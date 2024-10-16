@@ -12,19 +12,19 @@ import { useDebounceCallback } from "usehooks-ts";
 
 export default function PersonFilter<T, U extends keyof T>({
   serverItems,
-  initItem,
+  initItem = null,
   itemKey,
   itemLabel,
-  labelFunc,
+  labelTemplate,
   onSearch,
 }: {
   serverItems: T[];
-  initItem: T | null;
-  itemKey: U; // Key for the unique identifier
+  initItem?: T | null;
+  itemKey: U;
   onSearch: (search: string) => Promise<T[]>;
 } & (
-  | { itemLabel: keyof T; labelFunc?: never }
-  | { labelFunc: (item: T) => string; itemLabel?: never }
+  | { itemLabel: keyof T; labelTemplate?: never }
+  | { labelTemplate: string; itemLabel?: never }
 )) {
   const [items, setItems] = useState(serverItems);
   const [showItemSelect, setShowItemSelect] = useState(false);
@@ -36,6 +36,16 @@ export default function PersonFilter<T, U extends keyof T>({
   const onSearchItem = useDebounceCallback((search: string) => {
     onSearch(search).then(setItems);
   }, 500);
+
+  const labelFunc = (item: T) => {
+    if (labelTemplate) {
+      return labelTemplate.replace(
+        /\{(\w+)\}/g,
+        (_, key) => item[key as keyof T] as string
+      );
+    }
+    return null;
+  };
 
   return (
     <>
@@ -52,7 +62,7 @@ export default function PersonFilter<T, U extends keyof T>({
       >
         {selectedItem
           ? `[${selectedItem[itemKey]}] ${
-              labelFunc?.(selectedItem) ||
+              labelFunc(selectedItem) ||
               (itemLabel && selectedItem[itemLabel]) ||
               ""
             }`
@@ -86,7 +96,7 @@ export default function PersonFilter<T, U extends keyof T>({
             >
               <strong className="mr-1">[{item[itemKey] as string}]</strong>{" "}
               <span className="leading-4">
-                {labelFunc?.(item) || (itemLabel && item[itemLabel]) + "" || ""}
+                {labelFunc(item) || (itemLabel && item[itemLabel]) + "" || ""}
               </span>
             </CommandItem>
           ))}
