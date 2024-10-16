@@ -23,7 +23,7 @@ export default function HorizontalBarChart<T>({
   chartConfig?: ChartConfig;
 }) {
   return (
-    <ChartContainer config={chartConfig} className="h-96">
+    <ChartContainer config={chartConfig}>
       <BarChart layout="vertical" accessibilityLayer data={chartData}>
         <CartesianGrid horizontal={false} />
         <YAxis

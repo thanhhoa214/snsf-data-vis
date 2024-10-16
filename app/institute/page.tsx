@@ -56,8 +56,10 @@ export default async function Page({
         grants • {shortenNumber(institute._count.persons)} researchers
       </p>
 
-      <Researchers institute={institute} />
-      <Top5DisciplinesHighestAwards institute={institute.Institute} />
+      <div className="flex items-start gap-4">
+        <Researchers institute={institute} />
+        <Top5DisciplinesHighestAwards institute={institute.Institute} />
+      </div>
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}
         chartData={chartData}
