@@ -127,7 +127,7 @@ export default async function Page({
             at{" "}
             <Link
               href={`/institute?InstituteNumber=${researcher.InstituteNumber}`}
-              className="text-foreground font-semibold hover:underline underline-offset-4"
+              className="text-foreground font-semibold"
             >
               {researcher.Institute} ({researcher.InstitutePlace})
             </Link>
@@ -140,7 +140,10 @@ export default async function Page({
         <ul className="list-decimal list-inside mb-2">
           {uniqueGrants.map((grant) => (
             <li key={grant.GrantNumber}>
-              {grant.Title} ({grant.MainDiscipline})
+              <Link href={`/grant-detail/${grant.GrantNumber}`}>
+                {grant.Title}
+              </Link>
+              ({grant.MainDiscipline})
             </li>
           ))}
         </ul>

@@ -4,6 +4,7 @@ import PersonFilter from "@/components/ui2/PersonFilter";
 import { shortenNumber } from "@/lib/utils";
 import { getDisciplineLineData } from "../actions/discipline";
 import { getInstituteByNumber, searchInstitutes } from "../actions/institute";
+import GrantsInInstitute from "./Grants";
 import Researchers from "./Researchers";
 import Top5DisciplinesHighestAwards from "./Top5DisciplinesHighestAwards";
 
@@ -59,6 +60,9 @@ export default async function Page({
       <div className="flex items-start gap-4">
         <Researchers institute={institute} />
         <Top5DisciplinesHighestAwards institute={institute.Institute} />
+      </div>
+      <div className="flex items-start gap-4">
+        <GrantsInInstitute institute={institute} />
       </div>
       <FundTrendForDiscipline
         disciplines={uniqueDisciplines}

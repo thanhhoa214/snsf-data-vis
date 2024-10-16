@@ -98,6 +98,9 @@ body {
   h3 {
     @apply text-2xl font-bold;
   }
+  a {
+    @apply hover:underline underline-offset-2;
+  }
 }
 
 :root {
