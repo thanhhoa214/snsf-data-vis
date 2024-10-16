@@ -9,6 +9,7 @@ export async function getStatistics() {
   const totalAwards = prisma.outputAward.count();
   const totalInstitutes = prisma.institute.count();
   const totalDisciplines = prisma.discipline.count();
+  const totalResearchers = prisma.person.count();
 
   return Promise.all([
     totalFundedGrants,
@@ -16,5 +17,6 @@ export async function getStatistics() {
     totalAwards,
     totalInstitutes,
     totalDisciplines,
+    totalResearchers,
   ]);
 }

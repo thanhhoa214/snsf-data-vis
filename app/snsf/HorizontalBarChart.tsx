@@ -34,7 +34,12 @@ export default function HorizontalBarChart<T>({
           axisLine={false}
           width={100}
         />
-        <XAxis type="number" axisLine={false} tickLine={false} />
+        <XAxis
+          type="number"
+          axisLine={false}
+          tickLine={false}
+          tickFormatter={(v) => shortenNumber(v).toString()}
+        />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideIndicator />}
@@ -42,7 +47,7 @@ export default function HorizontalBarChart<T>({
         <Bar dataKey="amount" fill="var(--color-amount)" radius={8}>
           <LabelList
             position="right"
-            offset={12}
+            offset={4}
             className="fill-foreground"
             fontSize={12}
             formatter={shortenNumber}

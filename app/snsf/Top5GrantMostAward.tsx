@@ -18,7 +18,7 @@ import { shortenNumber } from "@/lib/utils";
 
 export default async function Top5GrantMostAward() {
   const top5GrantMostAward = await prisma.grant.findMany({
-    take: 5,
+    take: 10,
     orderBy: { AmountGrantedAllSets: "desc" },
     select: {
       GrantNumber: true,
@@ -34,7 +34,7 @@ export default async function Top5GrantMostAward() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top 5 grants get most award</CardTitle>
+        <CardTitle>Top 10 grants get most award</CardTitle>
         <CardDescription>
           Showcase the trending and funding allocation
         </CardDescription>
@@ -53,10 +53,7 @@ export default async function Top5GrantMostAward() {
             {top5GrantMostAward.map((grant) => (
               <TableRow key={grant.GrantNumber}>
                 <TableCell>{grant.GrantNumber}</TableCell>
-                <TableCell>
-                  {grant.Institute ||
-                    `${grant.GrantToPersonNetwork[0].Person1.FirstName} ${grant.GrantToPersonNetwork[0].Person1.Surname}`}
-                </TableCell>
+                <TableCell>{grant.Institute}</TableCell>
                 <TableCell>{grant.MainDiscipline}</TableCell>
                 <TableCell className="text-right">
                   {shortenNumber(grant.AmountGrantedAllSets)}

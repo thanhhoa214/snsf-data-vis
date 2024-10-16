@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { ChartConfig } from "@/components/ui/chart";
 import { prisma } from "@/lib/prisma/client";
-import ColumnChart from "./ColumnChart";
+import HorizontalBarChart from "./HorizontalBarChart";
 
 const chartConfig = {
   amount: { label: "Amount", color: "hsl(var(--chart-1))" },
@@ -35,7 +35,7 @@ export default async function Top10FundedCountries() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ColumnChart chartConfig={chartConfig} chartData={data} />
+        <HorizontalBarChart chartConfig={chartConfig} chartData={data} />
       </CardContent>
     </Card>
   );
