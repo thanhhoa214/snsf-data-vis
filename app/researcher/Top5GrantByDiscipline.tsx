@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -6,6 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -13,46 +21,62 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { prisma } from "@/lib/prisma/client";
 import { shortenNumber } from "@/lib/utils";
 import Link from "next/link";
-import { InstituteByNumber } from "../actions/institute";
+import { useEffect, useState } from "react";
+import {
+  getTop5GrantsByDisciplineNo,
+  Top5GrantsByDisciplineNoResponse,
+} from "../actions/grant";
 
-export default async function GrantsInInstitute({
-  institute,
+export default function Top5GrantByDiscipline({
+  disciplines,
+  selectedDisciplineNo,
+  serverResponse,
 }: {
-  institute: InstituteByNumber;
+  disciplines: { MainDiscipline: string; MainDisciplineNumber: number }[];
+  selectedDisciplineNo: number;
+  serverResponse: Top5GrantsByDisciplineNoResponse;
 }) {
-  if (!institute) return null;
+  const [discipline, setDiscipline] = useState(selectedDisciplineNo);
+  const [grants, setGrants] = useState(serverResponse);
 
-  const top5GrantMostAward = await prisma.grant.findMany({
-    orderBy: { AmountGrantedAllSets: "desc" },
-    select: {
-      GrantNumber: true,
-      Title: true,
-      AmountGrantedAllSets: true,
-      MainDiscipline: true,
-      GrantToPersonNetwork: {
-        select: {
-          Person1: {
-            select: { PersonNumber: true, FirstName: true, Surname: true },
-          },
-        },
-      },
-      GrantStartDate: true,
-      GrantEndDate: true,
-      InstituteCountry: true,
-    },
-    where: { Institute: institute.Institute },
-  });
+  useEffect(() => {
+    setDiscipline(selectedDisciplineNo);
+    setGrants(serverResponse);
+  }, [selectedDisciplineNo, serverResponse]);
+
+  useEffect(() => {
+    getTop5GrantsByDisciplineNo(discipline).then(setGrants);
+  }, [discipline]);
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Grants</CardTitle>
-        <CardDescription>
-          All grants by researchers in this institute
-        </CardDescription>
+      <CardHeader className="flex-row justify-between space-y-0">
+        <div>
+          <CardTitle>Top 5 Grants By Discipline</CardTitle>
+          <CardDescription>
+            Top 5 grants by discipline from 1975 to 2023
+          </CardDescription>
+        </div>
+        <Select
+          value={discipline + ""}
+          onValueChange={(e) => setDiscipline(+e)}
+        >
+          <SelectTrigger className="min-w-60 max-w-fit">
+            <SelectValue placeholder="Choose discipline" />
+          </SelectTrigger>
+          <SelectContent>
+            {disciplines.map(({ MainDiscipline, MainDisciplineNumber }) => (
+              <SelectItem
+                key={MainDisciplineNumber}
+                value={MainDisciplineNumber + ""}
+              >
+                {MainDiscipline}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </CardHeader>
       <CardContent>
         <div className="max-h-96 overflow-auto">
@@ -61,15 +85,15 @@ export default async function GrantsInInstitute({
               <TableRow>
                 <TableHead>Grant</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead>Researchers</TableHead>
-                <TableHead>Research Field</TableHead>
                 <TableHead>Start-end dates</TableHead>
-                <TableHead>Institute Country</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
+                <TableHead>Institute</TableHead>
+                <TableHead>Institute Country</TableHead>
+                <TableHead>Researchers</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {top5GrantMostAward.map((grant) => {
+              {grants.map((grant) => {
                 const uniqueResearchers = new Set<number>();
                 grant.GrantToPersonNetwork.forEach((person) => {
                   uniqueResearchers.add(person.Person1.PersonNumber);
@@ -107,15 +131,23 @@ export default async function GrantsInInstitute({
                       </Link>
                     </TableCell>
                     <TableCell>{grant.Title}</TableCell>
-                    <TableCell>{researchers}</TableCell>
-                    <TableCell>{grant.MainDiscipline}</TableCell>
                     <TableCell>
                       {grant.GrantStartDate} - {grant.GrantEndDate}
                     </TableCell>
-                    <TableCell>{grant.InstituteCountry}</TableCell>
                     <TableCell className="text-right">
                       {shortenNumber(grant.AmountGrantedAllSets)}
                     </TableCell>
+                    <TableCell>
+                      {grant.Institute ? (
+                        <span>
+                          {grant.Institute} ({grant.InstituteCountry})
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                    <TableCell>{grant.InstituteCountry}</TableCell>
+                    <TableCell>{researchers}</TableCell>
                   </TableRow>
                 );
               })}

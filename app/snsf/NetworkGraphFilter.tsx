@@ -29,6 +29,7 @@ export interface NetworkGraphFilterProps {
   };
   onSubmit: (grant: number | null, person: number | null) => void;
   isLoading: boolean;
+  defaultPersonNumber?: number;
 }
 
 export default function NetworkGraphFilter({

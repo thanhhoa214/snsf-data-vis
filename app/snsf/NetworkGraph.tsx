@@ -9,6 +9,7 @@ import {
   SearchControl,
   SigmaContainer,
   useLoadGraph,
+  useRegisterEvents,
   ZoomControl,
 } from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
@@ -16,11 +17,20 @@ import { useLayoutRandom } from "@react-sigma/layout-random";
 
 export interface GraphProps {
   data: GraphResponse;
+  onClickPerson?: (person: string) => void;
 }
 
-const RandomLayoutGraph = ({ data }: GraphProps) => {
+const RandomLayoutGraph = ({ data, onClickPerson }: GraphProps) => {
   const { positions, assign } = useLayoutRandom();
   const loadGraph = useLoadGraph();
+  const registerEvents = useRegisterEvents();
+
+  useEffect(() => {
+    registerEvents({
+      // node events
+      clickNode: (event) => onClickPerson?.(event.node),
+    });
+  }, [registerEvents, onClickPerson]);
 
   useEffect(() => {
     const graph = new Graph({ multi: true });
@@ -46,15 +56,13 @@ const RandomLayoutGraph = ({ data }: GraphProps) => {
   return null;
 };
 
-export const LayoutCircular: FC<{
-  data: GraphProps["data"];
-}> = ({ data }) => {
+export const LayoutCircular: FC<GraphProps> = ({ data, onClickPerson }) => {
   return (
     <SigmaContainer
       settings={{ allowInvalidContainer: true }}
       className="border rounded-xl w-3/4 aspect-video"
     >
-      <RandomLayoutGraph data={data} />
+      <RandomLayoutGraph data={data} onClickPerson={onClickPerson} />
       <ControlsContainer position={"bottom-right"}>
         <ZoomControl className="*:!flex *:justify-center *:items-center" />
         <FullScreenControl className="*:!flex *:justify-center *:items-center" />

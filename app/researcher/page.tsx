@@ -5,9 +5,10 @@ import { cn, shortenNumber } from "@/lib/utils";
 import Link from "next/link";
 import FundTrendForDiscipline from "../../components/ui2/FundTrendForDiscipline";
 import { getDisciplineLineData } from "../actions/discipline";
+import { getTop5GrantsByDisciplineNo } from "../actions/grant";
 import { searchPerson } from "../actions/persons";
-import Top5DisciplinesFewestGrants from "./Top5DisciplinesFewestGrants";
 import Top5DisciplinesHighestGrants from "./Top5DisciplinesHighestGrants";
+import Top5GrantByDiscipline from "./Top5GrantByDiscipline";
 import Top5GrantsByInsititue from "./Top5GrantsByInsititue";
 
 export default async function Page({
@@ -110,27 +111,28 @@ export default async function Page({
         onSearch={searchPerson}
       />
       <p className="text-sm text-muted-foreground">
-        <span className="text-foreground font-semibold">
+        <strong className="text-foreground">
           {researcher.FirstName} {researcher.Surname}
-        </span>{" "}
-        is a researcher has funded{" "}
-        <span className="text-foreground font-semibold">
+        </strong>{" "}
+        has received{" "}
+        <strong className="text-foreground">
           {shortenNumber(uniqueGrants.length)} grants
-        </span>{" "}
+        </strong>{" "}
         in{" "}
-        <span className="text-foreground font-semibold">
+        <strong className="text-foreground">
           {shortenNumber(disciplines.length)} disciplines
-        </span>
+        </strong>
         {researcher.Institute && (
           <>
             {" "}
-            at{" "}
+            and he is currently working at{" "}
             <Link
               href={`/institute?InstituteNumber=${researcher.InstituteNumber}`}
               className="text-foreground font-semibold"
             >
-              {researcher.Institute} ({researcher.InstitutePlace})
-            </Link>
+              {researcher.Institute}
+            </Link>{" "}
+            ({researcher.InstitutePlace})
           </>
         )}
       </p>
@@ -142,7 +144,7 @@ export default async function Page({
             <li key={grant.GrantNumber}>
               <Link href={`/grant-detail/${grant.GrantNumber}`}>
                 {grant.Title}
-              </Link>
+              </Link>{" "}
               ({grant.MainDiscipline})
             </li>
           ))}
@@ -165,9 +167,15 @@ export default async function Page({
         {researcher.Institute && (
           <Top5GrantsByInsititue institute={researcher.Institute} />
         )}
-        <Top5DisciplinesFewestGrants />
         <Top5DisciplinesHighestGrants />
       </section>
+      <Top5GrantByDiscipline
+        disciplines={disciplines}
+        selectedDisciplineNo={disciplines[0].MainDisciplineNumber}
+        serverResponse={await getTop5GrantsByDisciplineNo(
+          disciplines[0].MainDisciplineNumber
+        )}
+      />
       <FundTrendForDiscipline disciplines={disciplines} chartData={chartData} />
     </main>
   );

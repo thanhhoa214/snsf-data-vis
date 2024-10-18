@@ -101,6 +101,9 @@ body {
   a {
     @apply hover:underline underline-offset-2;
   }
+  strong {
+    @apply font-semibold;
+  }
 }
 
 :root {
