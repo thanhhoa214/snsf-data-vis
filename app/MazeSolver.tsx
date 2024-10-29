@@ -26,8 +26,6 @@ export default function MazeSolver({
         onSubmit={(e) => {
           e.preventDefault();
           const text = e.currentTarget.maze.value as string;
-          console.log(text);
-
           if (!text) return;
           const newMaze = text.split("\n").map((row) => row.trim().split(""));
           setMaze(newMaze);
@@ -37,9 +35,8 @@ export default function MazeSolver({
           name="maze"
           rows={maze.length}
           className="block mb-2 font-mono"
-        >
-          {maze.map((row) => row.join("")).join("\n")}
-        </textarea>
+          defaultValue={maze.map((row) => row.join("")).join("\n")}
+        ></textarea>
         <Button size={"sm"}>Submit</Button>
       </form>
 
