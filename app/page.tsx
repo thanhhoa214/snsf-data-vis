@@ -1,25 +1,34 @@
-import { links } from "@/components/ui2/Navbar";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import MazeSolver from "./MazeSolver";
 
-export default function Home() {
+const sampleMazes = [
+  `xxxxxxxxxxxxx
+x.....x.....x
+x.xxx.x.xxx.x
+x.x.x.x.x.x.x
+x.xxx.x.xxx.x
+x.....x.....x
+xxxxxxxxxx.xx`,
+  `xxxxxxx
+  ..x.x.x
+  x.xxxxx
+  x...x.x
+  x.x.xxx
+  x.....x
+  xxxxxxx`,
+];
+
+const mazes = sampleMazes.map((maze) =>
+  maze.split("\n").map((row) => row.trim().split(""))
+);
+
+export default function page() {
   return (
-    <main className="min-h-dvh flex flex-col items-center gap-4 justify-center">
-      <h1>Choose your dashboard</h1>
-      <ul className="flex justify-center items-center gap-8">
-        {links.map(({ label, icon, className }) => (
-          <li key={label}>
-            <Link
-              href={`/${label.toLowerCase()}`}
-              className={cn(
-                "flex flex-col justify-center items-center p-4 w-40 aspect-video border rounded-xl",
-                className
-              )}
-            >
-              {icon}
-              <strong>{label}</strong>
-            </Link>
-          </li>
+    <main className="p-8">
+      <h1>Check valid maze using Blood fill algorithm in C++</h1>
+
+      <ul className="grid grid-cols-2 gap-4">
+        {mazes.map((maze, i) => (
+          <MazeSolver key={i} maze={maze} />
         ))}
       </ul>
     </main>
